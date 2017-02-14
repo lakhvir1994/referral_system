@@ -1,0 +1,36 @@
+<style>
+	.require{
+		border-color: red;
+  		border-width:1px;
+  		border-style: solid;
+	}
+</style>
+<h2>Sign In</h2>
+<%= form_for :invite, url: referral_invites_path do |f| %>
+	<span>Enter E-mail : </span>
+	<%= f.email_field :email, :id => "user_email" %><br><br>
+	<%= f.submit 'Sign In', :id => "sign_in" %>
+<% end %>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+
+		$(document).delegate("#user_email", "focusin", function(){
+        	$(this).removeClass();
+    	});
+
+    	$(document).delegate("#sign_in", "click", function(event){
+
+        	var email = $("#user_email").val();
+
+        	if(email == 0)
+        	{
+            	event.preventDefault();
+            	$("#user_email").addClass('require'); 
+        	} 
+		});
+    });
+
+
+</script>

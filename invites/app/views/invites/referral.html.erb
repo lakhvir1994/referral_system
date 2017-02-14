@@ -1,0 +1,85 @@
+<style>
+	.require{
+		border-color: red;
+  		border-width:1px;
+  		border-style: solid;
+	}
+</style>
+
+<h1>Invite Your Friends</h1>
+<h4>You will get $50 per each referral + your friend will get $50.</h4>
+<%= @user_email[:email] %>
+
+<%= form_for :invite do |f| %>
+	<%= f.hidden_field :user_email, :value => @user_email[:email] %>
+	<span>Email : </span>
+	<%= f.text_field :referral_mails, :id => "referral_mails", :placeholder => "Add friends' email address" %>
+	<%= f.submit 'INVITE', :id => "invite" %>
+	<p>( Separate multiple emails with commas. )</p>
+	<div id="result"></div>
+
+<% end %>
+<div id=""></div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$(document).delegate("#referral_mails", "focusin", function(){
+        	$(this).removeClass();
+    	});
+
+		$(document).delegate("#invite", "click", function(event){
+			event.preventDefault();
+			var valid = [];
+			var unvalid = [];
+			var emails = $("#referral_mails").val();
+			var email_array = emails.split(",")
+			for(i = 0; i < email_array.length; i++)
+			{
+        		validateEmail(email_array[i])? valid.push(i) : unvalid.push(i) ;
+            }     
+
+            if(valid.length == email_array.length)
+            {
+            		
+            	var form_data = $("form").serialize();
+            	var form_url = "<%= invites_path %>";
+            	$.ajax({
+                	type: "POST",
+                	url:form_url,
+                	data: form_data,
+                	success: function(data){
+                		$("#result").html("Contact(s) invited successfully").css('color', 'green');
+                		// var values = JSON.parse('data');
+
+                		console.log(data);
+                		
+                	},
+                	error: function(e){
+                    console.log(e);
+                    alert("fail");
+                }
+            });
+            }              
+            else
+            {
+            	// event.preventDefault();
+            	$("#referral_mails").addClass('require');	
+            	$("#result").html("Use a valid email address.").css('color', 'red');
+            }
+        });
+	});
+
+	// Function that validates email address through a regular expression.
+	function validateEmail(sEmail) {
+		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+		if (filter.test(sEmail)) 
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+</script>
