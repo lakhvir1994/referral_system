@@ -1,0 +1,17 @@
+<table border>
+	<tr>
+		<th>User Email</th>
+		<th>Referral Mails</th>
+		<!-- <th></th>
+		<!-- <th>Status</th > -->
+	</tr>
+<% @invites.each do |data| %>
+	<tr>
+		<td><%= data.user_email %></td>
+		<td><%= data.referral_mails %></td>
+		<td><%= link_to 'Destroy', invite_path(data),
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %></td>
+	</tr>
+<% end %>
+</table>
